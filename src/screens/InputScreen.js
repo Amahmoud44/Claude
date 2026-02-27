@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Alert,
   KeyboardAvoidingView,
+  Modal,
   Platform,
   StatusBar,
 } from 'react-native';
@@ -60,6 +61,9 @@ export default function InputScreen({ navigation }) {
 
   // Field errors
   const [errors, setErrors] = useState({});
+
+  // Info modal
+  const [infoVisible, setInfoVisible] = useState(false);
 
   const getNumeric = (str) => (str.trim() === '' ? null : parseFloat(str));
 
@@ -137,11 +141,53 @@ export default function InputScreen({ navigation }) {
 
       {/* Header */}
       <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.infoButton}
+          onPress={() => setInfoVisible(true)}
+          activeOpacity={0.75}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+        >
+          <Text style={styles.infoButtonText}>ℹ</Text>
+        </TouchableOpacity>
         <Text style={styles.headerTitle}>ASCVD Risk Calculator</Text>
         <Text style={styles.headerSubtitle}>
           ACC/AHA Pooled Cohort Equations — Goff 2014
         </Text>
       </View>
+
+      {/* About Modal */}
+      <Modal
+        visible={infoVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setInfoVisible(false)}
+      >
+        <TouchableOpacity
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setInfoVisible(false)}
+        >
+          <View style={styles.modalCard}>
+            <Text style={styles.modalAppName}>ASCVD Risk Calculator</Text>
+            <View style={styles.modalDivider} />
+            <Text style={styles.modalVersion}>Version 1.0</Text>
+            <Text style={styles.modalAuthor}>
+              Ahmed N Mahmoud MD, FACC
+            </Text>
+            <Text style={styles.modalYear}>© 2026</Text>
+            <Text style={styles.modalCredit}>
+              Developed with the aid of Claude Code
+            </Text>
+            <TouchableOpacity
+              style={styles.modalCloseBtn}
+              onPress={() => setInfoVisible(false)}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.modalCloseBtnText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Modal>
 
       <ScrollView
         style={styles.scroll}
@@ -334,17 +380,100 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.md,
     ...SHADOW.medium,
   },
+  infoButton: {
+    position: 'absolute',
+    top: Platform.OS === 'android' ? (StatusBar.currentHeight || 24) + 10 : 50,
+    left: SPACING.md,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(255,255,255,0.22)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
+  },
+  infoButtonText: {
+    color: COLORS.white,
+    fontSize: 15,
+    fontWeight: '700',
+    lineHeight: 18,
+  },
   headerTitle: {
     color: COLORS.white,
     fontSize: FONTS.sizes.xxl,
     fontWeight: '800',
     letterSpacing: 0.4,
+    paddingLeft: 36,
   },
   headerSubtitle: {
     color: 'rgba(255,255,255,0.75)',
     fontSize: FONTS.sizes.sm,
     marginTop: 3,
     letterSpacing: 0.2,
+    paddingLeft: 36,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.45)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalCard: {
+    backgroundColor: COLORS.white,
+    borderRadius: RADIUS.lg,
+    padding: SPACING.xl,
+    width: '78%',
+    alignItems: 'center',
+    ...SHADOW.medium,
+  },
+  modalAppName: {
+    fontSize: FONTS.sizes.lg,
+    fontWeight: '800',
+    color: COLORS.primary,
+    textAlign: 'center',
+    letterSpacing: 0.3,
+  },
+  modalDivider: {
+    width: '60%',
+    height: 1,
+    backgroundColor: COLORS.border || '#E0E0E0',
+    marginVertical: SPACING.sm,
+  },
+  modalVersion: {
+    fontSize: FONTS.sizes.md,
+    fontWeight: '600',
+    color: COLORS.text,
+    marginBottom: 4,
+  },
+  modalAuthor: {
+    fontSize: FONTS.sizes.sm,
+    fontWeight: '600',
+    color: COLORS.text,
+    textAlign: 'center',
+  },
+  modalYear: {
+    fontSize: FONTS.sizes.sm,
+    color: COLORS.textMuted,
+    marginTop: 2,
+    marginBottom: SPACING.sm,
+  },
+  modalCredit: {
+    fontSize: FONTS.sizes.xs,
+    color: COLORS.textMuted,
+    textAlign: 'center',
+    fontStyle: 'italic',
+    marginBottom: SPACING.md,
+  },
+  modalCloseBtn: {
+    backgroundColor: COLORS.primary,
+    borderRadius: RADIUS.md,
+    paddingVertical: SPACING.sm,
+    paddingHorizontal: SPACING.xl,
+  },
+  modalCloseBtnText: {
+    color: COLORS.white,
+    fontWeight: '700',
+    fontSize: FONTS.sizes.sm,
   },
   scroll: {
     flex: 1,
