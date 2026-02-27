@@ -1,0 +1,13 @@
+# Treat all PNG, JPG, and other image/binary files as binary to prevent CRLF corruption on Windows
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+
+# Fonts
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
