@@ -857,6 +857,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.offWhite,
+    ...(Platform.OS === 'web' ? { height: '100vh', overflow: 'hidden' } : {}),
   },
   header: {
     backgroundColor: COLORS.primary,
